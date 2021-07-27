@@ -5,8 +5,11 @@ from typing import Any
 
 import requests
 from binance import AsyncClient
-from config import telegram_token, telegram_chat_id
+from bson.objectid import ObjectId
+
 from backup import Signals
+from config import telegram_chat_id, telegram_token
+
 
 def telegram_bot_sendtext(bot_message):
     if telegram_token and telegram_chat_id:
@@ -41,6 +44,7 @@ async def main() -> None:
     
     # List of USDT symbols
     usdt_symbols = [x['symbol'] for x in usdt_tickers]
+    usdt_symbols.sort()
 
     def rounder(time: datetime) -> datetime:
         # Example: Round time from 16:31:49 to 16:00:00
@@ -66,6 +70,9 @@ async def main() -> None:
                 minutes_left = 60 - datetime.now().minute
                 print(f'Wait for new signal: {minutes_left} min')
                 time.sleep(60 * minutes_left)
+                print('Update signal time in DB')
+                signal_filter = dict(_id=ObjectId(signal['_id']))
+                signals.update_item(signal_filter, {'$set': {'start_date_ts': start_time_ts}})
                 
         start_date_time = datetime.fromtimestamp(start_time_ts / 1000)
         start_date = start_date_time.date()
@@ -73,9 +80,6 @@ async def main() -> None:
         msg_time = f'\U0001F4C5{start_date} \u23F0{start_time}'
         msg_buy = f'\n\n\U0001F4C8 *BUY*'
         msg_sell = f'\n\n\U0001F4C9 *SELL*'
-        
-        print('Update signal time in DB')
-        signals.update_item(signal, {'$set': {'start_date_ts': start_time_ts}})
 
         # Fetch last hour candle for each USDT pair
         # Filter candles by BUY or SELL market power

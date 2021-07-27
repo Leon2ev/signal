@@ -1,5 +1,5 @@
 import os
-from typing import Any
+from typing import Any, Union
 
 from pymongo import MongoClient
 
@@ -18,7 +18,7 @@ class Signals():
     def insert_item(self, time: dict[str,Any]) -> None:
         signals.insert_one(time)
 
-    def get_item(self):
+    def get_item(self) -> Union[dict[str,Any], None]:
         return signals.find_one()
 
     def update_item(self, filter, value):
