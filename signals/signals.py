@@ -3,7 +3,6 @@ import time
 from datetime import datetime, timedelta
 from typing import Any
 
-import requests
 from binance import AsyncClient
 from bson.objectid import ObjectId
 
@@ -11,33 +10,19 @@ from backup import Signals
 from config import telegram_chat_id, telegram_token
 from marker_filter import MarketFilter
 from technicals import AwesomeOscillator
+from telegram_bot import TelegramBot
 
-
-def telegram_bot_sendtext(bot_message):
-    if telegram_token and telegram_chat_id:
-        send_text = 'https://api.telegram.org/bot'\
-            + telegram_token +\
-            '/sendMessage?chat_id=' +\
-            telegram_chat_id +\
-            '&parse_mode=Markdown&text=' +\
-            bot_message
-
-        response = requests.get(send_text)
-        return response.json()
-    elif not telegram_token:
-        print('Token missing')
-
-    else:
-        print('Chat id missing')
 
 async def main() -> None:
     client = await AsyncClient.create()
-
+    
     market_filter = MarketFilter(client)
     usdt_symbols = await market_filter.usdt
 
     awesome_oscilator = AwesomeOscillator(usdt_symbols, client)
     await awesome_oscilator.run()
+
+    telegram_bot = TelegramBot(telegram_token, telegram_chat_id)
 
     def rounder(time: datetime) -> datetime:
         # Example: Round time from 16:31:49 to 16:00:00
@@ -92,8 +77,8 @@ async def main() -> None:
                     msg = f'\n*{symbol}* _{signal}_'
                     msg_sell = msg_sell + msg
 
-        t_msg = msg_time + msg_buy + msg_sell
-        telegram_bot_sendtext(t_msg)
+        msg = msg_time + msg_buy + msg_sell
+        telegram_bot.send_msg(msg)
         time.sleep(60 * (60 - datetime.now().minute))
 
 
