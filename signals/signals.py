@@ -9,6 +9,8 @@ from bson.objectid import ObjectId
 
 from backup import Signals
 from config import telegram_chat_id, telegram_token
+from marker_filter import MarketFilter
+from technicals import AwesomeOscillator
 
 
 def telegram_bot_sendtext(bot_message):
@@ -30,21 +32,12 @@ def telegram_bot_sendtext(bot_message):
 
 async def main() -> None:
     client = await AsyncClient.create()
-    tickers = await client.get_all_tickers()
 
-    # Filter all USDT tickers
-    usdt_tickers = list(
-        filter(lambda x: 
-        x['symbol'][-4:] == 'USDT' and 
-        x['symbol'][-8:-4] != 'DOWN' and
-        x['symbol'][-8:-4] != 'BEAR' and
-        x['symbol'][-8:-4] != 'BULL' and
-        x['symbol'][-6:-4] != 'UP', tickers)
-        )
-    
-    # List of USDT symbols
-    usdt_symbols = [x['symbol'] for x in usdt_tickers]
-    usdt_symbols.sort()
+    market_filter = MarketFilter(client)
+    usdt_symbols = await market_filter.usdt
+
+    awesome_oscilator = AwesomeOscillator(usdt_symbols, client)
+    await awesome_oscilator.run()
 
     def rounder(time: datetime) -> datetime:
         # Example: Round time from 16:31:49 to 16:00:00
