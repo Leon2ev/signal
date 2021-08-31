@@ -17,11 +17,10 @@ async def main() -> None:
     
     market_filter = MarketFilter(client)
     usdt_symbols = await market_filter.usdt
-
-    awesome_oscilator = AwesomeOscillator(usdt_symbols, client)
-    await awesome_oscilator.run()
-
     telegram_bot = TelegramBot()
+
+    awesome_oscilator = AwesomeOscillator(usdt_symbols, client, telegram_bot)
+    await awesome_oscilator.run()
 
     def rounder(time: datetime) -> datetime:
         # Example: Round time from 16:31:49 to 16:00:00

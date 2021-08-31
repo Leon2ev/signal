@@ -5,16 +5,19 @@ import pandas as pd
 from binance import AsyncClient
 from pandas import DataFrame as df
 from ta.momentum import AwesomeOscillatorIndicator
+from telegram_bot import TelegramBot
 
 
 class AwesomeOscillator():
     def __init__(
         self,
         symbols: list[str],
-        client: AsyncClient
+        client: AsyncClient,
+        telegram_bot: TelegramBot
     ):
         self.symbols = symbols
         self.client = client
+        self.telegram_bot = telegram_bot
 
     async def get_ao(self, symbol: str, interval: str) -> None:
 
@@ -52,7 +55,7 @@ class AwesomeOscillator():
                 interval = str(self.client.KLINE_INTERVAL_4HOUR)
                 await self.get_ao(symbol, interval)
             else:
-                print(symbol, 'bingo')
+                self.telegram_bot.send_msg(f'{symbol} BINGO!')
 
     async def run(self) -> None:
         interval = str(self.client.KLINE_INTERVAL_1HOUR)
