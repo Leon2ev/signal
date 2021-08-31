@@ -1,15 +1,12 @@
 import requests
-from typing import Union
+
+from config import telegram_chat_id, telegram_token
 
 
 class TelegramBot():
-    def __init__(
-        self,
-        token: Union[str, None],
-        chat_id: Union[str, None]
-    ):
-        self.token = token
-        self.chat_id = chat_id
+    def __init__(self):
+        self.token = telegram_token
+        self.chat_id = telegram_chat_id
 
     def send_msg(self, msg: str) -> None:
         if self.token and self.chat_id:

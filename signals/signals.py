@@ -7,7 +7,6 @@ from binance import AsyncClient
 from bson.objectid import ObjectId
 
 from backup import Signals
-from config import telegram_chat_id, telegram_token
 from marker_filter import MarketFilter
 from technicals import AwesomeOscillator
 from telegram_bot import TelegramBot
@@ -22,7 +21,7 @@ async def main() -> None:
     awesome_oscilator = AwesomeOscillator(usdt_symbols, client)
     await awesome_oscilator.run()
 
-    telegram_bot = TelegramBot(telegram_token, telegram_chat_id)
+    telegram_bot = TelegramBot()
 
     def rounder(time: datetime) -> datetime:
         # Example: Round time from 16:31:49 to 16:00:00
