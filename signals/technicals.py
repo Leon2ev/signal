@@ -50,11 +50,12 @@ class AwesomeOscillator():
         low = pd.to_numeric(candles_df['Low'])
         indicator = AwesomeOscillatorIndicator(high, low)
         ao_values = indicator.awesome_oscillator()
-        if ao_values[34] > 0 and ao_values[33] < 0:
-            if interval == '1h':
+        if interval == '1h':
+            if ao_values[34] > 0 and ao_values[33] < 0:
                 interval = str(self.client.KLINE_INTERVAL_4HOUR)
                 await self.get_ao(symbol, interval)
-            else:
+        else:
+            if ao_values[34] > 0:
                 self.telegram_bot.send_msg(f'{symbol} BINGO!')
 
     async def run(self) -> None:
