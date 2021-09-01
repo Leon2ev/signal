@@ -50,6 +50,11 @@ class AwesomeOscillator():
         low = pd.to_numeric(candles_df['Low'])
         indicator = AwesomeOscillatorIndicator(high, low)
         ao_values = indicator.awesome_oscillator()
+
+        if candles_df.size < 35:
+            print(f'New coin: {symbol}')
+            return
+
         if interval == '1h':
             if ao_values[34] > 0 and ao_values[33] < 0:
                 interval = str(self.client.KLINE_INTERVAL_4HOUR)
