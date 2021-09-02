@@ -10,7 +10,7 @@ class Data():
     async def tickers(self) -> list[dict[str, str]]:
         return await self.client.get_all_tickers()
 
-    async def get_klines_df(self, symbol: str, interval: str, limit: str) -> df:
+    async def get_klines_df(self, symbol: str, interval: str, limit: int) -> df:
         klines = await self.client.get_klines(
             symbol=symbol,
             interval=interval,

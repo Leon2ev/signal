@@ -9,16 +9,17 @@ from ta.momentum import AwesomeOscillatorIndicator
 class AOSignal():
     @staticmethod
     async def is_impulse(data: Data, symbol: str) -> bool:
-        interval = '1h'
-        ao_values = await AOSignal.get_ao_values(data, symbol, interval)
+        interval = str('1h')
+        limit = int(36)
+        ao_values = await AOSignal.get_ao_values(data, symbol, interval, limit)
 
         if ao_values.size < 35:
             print(f'New coin: {symbol}')
             return False
 
         if ao_values[34] > 0 and ao_values[33] < 0:
-            interval = '4h'
-            ao_values = await AOSignal.get_ao_values(data, symbol, interval)
+            interval = str('4h')
+            ao_values = await AOSignal.get_ao_values(data, symbol, interval, limit)
 
             if ao_values[34] > 0:
                 return True
@@ -30,8 +31,7 @@ class AOSignal():
             return False
 
     @staticmethod
-    async def get_ao_values(data, symbol, interval) -> Series:
-        limit = str('36')
+    async def get_ao_values(data: Data, symbol: str, interval: str, limit: int) -> Series:
         klines_df = await data.get_klines_df(symbol, interval, limit)
         high = klines_df['High']
         low = klines_df['Low']
