@@ -4,9 +4,9 @@ from pandas.core.series import Series
 
 class AOSignal():
     @staticmethod
-    async def run(data: Data) -> None:
+    async def get_signals(data: Data) -> str:
         impulse_symbols = await AOSignal.get_impulse_symbols(data)
-        await AOSignal.get_local_minimum(data, impulse_symbols)
+        return await AOSignal.get_local_min_and_max(data, impulse_symbols)
 
     @staticmethod
     async def is_impulse(data: Data, symbol: str) -> bool:
@@ -49,16 +49,19 @@ class AOSignal():
         return impulse_symbols
 
     @staticmethod
-    async def get_local_minimum(data: Data, symbols: list[str]):
+    async def get_local_min_and_max(data: Data, symbols: list[str]) -> str:
         interval = str('1h')
+        msg = f'\U0001F4C8 *BINGO*'
         
         for symbol in symbols:
             limit = int(100)
             klines_df = await data.get_klines_df(symbol, interval, limit)
             index = AOSignal.get_index_of_last_positive_ao(klines_df['AO'])
-            min_low = klines_df['Low'].iloc[index:].min()
-            max_high = klines_df['High'].iloc[index:].max()
-            print(f'{symbol} min: {min_low} max: {max_high}')
+            min_low = klines_df['Low'].iloc[index:-1].min()
+            max_high = klines_df['High'].iloc[-2:].max()
+            msg = msg + f'\n\n*{symbol}* min: {min_low} max: {max_high}'
+
+        return msg
 
     @staticmethod
     def get_index_of_last_positive_ao(ao_values: Series) -> int:

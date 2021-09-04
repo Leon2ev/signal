@@ -14,9 +14,15 @@ from signals.ao_signal import AOSignal
 
 async def main() -> None:
     client = await AsyncClient.create()
-    
+    telegram_bot = TelegramBot()
     data = Data(client)
-    await AOSignal.run(data)
+
+    while True:
+
+        signals = await AOSignal.get_signals(data)
+        telegram_bot.send_msg(signals)
+
+        time.sleep(60 * (60 - datetime.now().minute))
     # impulse_symbols = await AOSignal.get_impulse_symbols(data)
     # min_price = await AOSignal.get_local_minimum(data, impulse_symbols)
     # print(min_price)
