@@ -1,6 +1,6 @@
-import pandas as pd
 from binance import AsyncClient
 from pandas import DataFrame as df
+from ta.momentum import AwesomeOscillatorIndicator
 
 
 class Data():
@@ -30,8 +30,13 @@ class Data():
             'Taker buy quote',
             'Ignore'])
 
-        klines_df['High'] = pd.to_numeric(klines_df['High'])
-        klines_df['Low'] = pd.to_numeric(klines_df['Low'])
+        klines_df['High'] = klines_df['High'].astype('float64')
+        klines_df['Low'] = klines_df['Low'].astype('float64')
+
+        ao_indicator = AwesomeOscillatorIndicator(klines_df['High'], klines_df['Low'])
+        klines_df['AO'] = ao_indicator.awesome_oscillator()
+
+        klines_df['AO'] = klines_df['AO'].astype('float64')
 
         return klines_df
 
