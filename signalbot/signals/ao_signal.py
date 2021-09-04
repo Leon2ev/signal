@@ -65,7 +65,7 @@ class AOSignal():
 
         '''Remove two last rows of Series because they are been used for signal.
         Remove from the Series all values less than zero. Return index of last row in Series'''
-        zero_float = float(0)
-        greater_than_zero = ao_values.iloc[:-2].where(ao_values > zero_float).dropna()
+        
+        greater_than_zero = ao_values.iloc[:-2].where(ao_values.gt(0)).dropna()
         
         return greater_than_zero.tail(1).index[0]
