@@ -31,7 +31,7 @@ class Data():
             'Ignore'])
 
         klines_df['High'] = pd.to_numeric(klines_df['High'])
-        klines_df['Low'] = pd.to_numeric(klines_df['High'])
+        klines_df['Low'] = pd.to_numeric(klines_df['Low'])
 
         return klines_df
 
@@ -46,7 +46,9 @@ class Data():
                 x['symbol'][-8:-4] != 'BEAR' and
                 x['symbol'][-8:-4] != 'BULL' and
                 x['symbol'][-6:-4] != 'UP' and
+                x['symbol'] != 'EURUSDT' and
                 x['symbol'] != 'USDSBUSDT' and
+                x['symbol'] != 'SUSDUSDT' and
                 x['symbol'] != 'BUSDUSDT', tickers))
         
         symbols = [x['symbol'] for x in filtered_tickers]

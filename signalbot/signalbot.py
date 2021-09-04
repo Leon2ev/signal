@@ -17,7 +17,8 @@ async def main() -> None:
     
     data = Data(client)
     impulse_symbols = await AOSignal.get_impulse_symbols(data)
-    print(impulse_symbols)
+    min_price = await AOSignal.get_local_minimum(data, impulse_symbols)
+    print(min_price)
 
     # telegram_bot = TelegramBot()
 
