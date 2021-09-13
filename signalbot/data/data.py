@@ -53,6 +53,7 @@ class Data():
                 x['symbol'][-6:-4] != 'UP' and
                 x['symbol'] != 'EURUSDT' and
                 x['symbol'] != 'USDSBUSDT' and
+                x['symbol'] != 'USDPUSDT' and
                 x['symbol'] != 'SUSDUSDT' and
                 x['symbol'] != 'BUSDUSDT', tickers))
         
