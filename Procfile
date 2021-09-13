@@ -1,1 +1,1 @@
-worker: python ./signals/signals.py
+worker: python ./signalbot/signalbot.py
