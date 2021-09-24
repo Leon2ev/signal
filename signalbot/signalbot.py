@@ -22,7 +22,8 @@ async def main() -> None:
         if msg:
             telegram_bot.send_msg(msg)
 
-        time.sleep(60 * (60 - datetime.now().minute))
+        # time.sleep(60 * (60 - datetime.now().minute))
+        time.sleep(60 * ((60 - datetime.now().minute) % 15))
 
 
 if __name__ == "__main__":
