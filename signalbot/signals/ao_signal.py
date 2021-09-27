@@ -8,7 +8,7 @@ class AOSignal(Data):
         signal_symbols = list()
 
         for symbol in symbols:
-            interval = str('15m')
+            interval = str('1h')
             limit = int(100)
             klines_df = await data.get_klines_df(symbol, interval, limit)
 
@@ -24,7 +24,7 @@ class AOSignal(Data):
                     high_period = klines_df['High'].iloc[last_negative_ao_index:]
 
                     if 10 > high_period.size > 4 and high_period.idxmax() == 97:
-                        interval = str('1h')
+                        interval = str('4h')
                         limit = int(36)
                         klines_df = await data.get_klines_df(symbol, interval, limit)
 
