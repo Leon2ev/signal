@@ -4,9 +4,11 @@ from datetime import datetime
 
 from binance import AsyncClient
 
-from signals.data import Data
 from signals.awesome import AOSignal
+from signals.data import Data
+from signals.rsi_divergence import RSIDivergence
 from telegram_bot import TelegramBot
+
 
 async def main() -> None:
     binance_client = await AsyncClient.create()
@@ -18,11 +20,13 @@ async def main() -> None:
     while True:
         await data.gather_klines_df('1h', 100)
 
-        signal_symbols = await AOSignal.get(data)
+        ao_signals = await AOSignal.get(data)
+        rsi = RSIDivergence(data)
+        rsi_signals = await rsi.get()
         
-        msg = telegram_bot.compose_msg(signal_symbols)
-        if msg:
-            telegram_bot.send_msg(msg)
+        messages = telegram_bot.compose_msg(ao_signals, rsi_signals)
+        if messages:
+            telegram_bot.send_msg(messages)
 
         time.sleep(60 * (60 - datetime.now().minute))
 

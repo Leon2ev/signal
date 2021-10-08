@@ -31,6 +31,10 @@ class Data():
 					x['symbol'][-8:-4] != 'BEAR' and
 					x['symbol'][-8:-4] != 'BULL' and
 					x['symbol'][-6:-4] != 'UP' and
+					x['symbol'] != 'BCCUSDT' and
+					x['symbol'] != 'BCHSVUSDT' and
+					x['symbol'] != 'HCUSDT' and
+					x['symbol'] != 'MCOUSDT' and
 					x['symbol'] != 'EURUSDT' and
 					x['symbol'] != 'USDSBUSDT' and
 					x['symbol'] != 'USDPUSDT' and
@@ -73,6 +77,7 @@ class Data():
 
 		klines_df['High'] = klines_df['High'].astype('float64')
 		klines_df['Low'] = klines_df['Low'].astype('float64')
+		klines_df['Close'] = klines_df['Close'].astype('float64')
 
 		ao = AwesomeOscillatorIndicator(klines_df['High'], klines_df['Low'])
 		klines_df['AO'] = ao.awesome_oscillator()

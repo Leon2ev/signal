@@ -10,17 +10,18 @@ class TelegramBot():
         self.token = telegram_token
         self.chat_id = telegram_chat_id
 
-    def send_msg(self, msg: str) -> None:
+    def send_msg(self, messages: list[str]) -> None:
         if self.token and self.chat_id:
-        
-            url = ( 
-                'https://api.telegram.org/bot' + self.token +
-                '/sendMessage?chat_id=' + self.chat_id +
-                '&parse_mode=Markdown&text=' + msg +
-                '&disable_web_page_preview=True'
-            )
+            
+            for msg in messages:
+                url = ( 
+                    'https://api.telegram.org/bot' + self.token +
+                    '/sendMessage?chat_id=' + self.chat_id +
+                    '&parse_mode=Markdown&text=' + msg +
+                    '&disable_web_page_preview=True'
+                )
 
-            requests.get(url)
+                requests.get(url)
 
         elif not self.token:
             print('Token missing')
@@ -28,12 +29,24 @@ class TelegramBot():
         else:
             print('Chat id missing')
 
-    def compose_msg(self, signal_symbols) -> Union[str,None]:
-        if signal_symbols:
-            msg = f'\u2705 *JACKPOT*'
+    def compose_msg(self, ao_signal, rsi_signal) -> Union[list[str],None]:
+        messages = list()
+        if ao_signal:
+            msg = f'\u2705 *AO Signal*'
 
-            for signal in signal_symbols:
+            for signal in ao_signal:
                 msg += f'\n\n*{signal}* \U0001F4C8 [Chart](https://www.binance.com/en/trade/{signal[:-4]}_{signal[-4:]})'
             
-            return msg
+            messages.append(msg)
+
+        if rsi_signal:
+            msg = f'\u2705 *RSI Signal*'
+
+            for signal in rsi_signal:
+                symbol, time = signal.values()
+                msg += f'\n\n*{symbol}* {time} hours ago \U0001F4C8 [Chart](https://www.binance.com/en/trade/{symbol[:-4]}_{symbol[-4:]})'
+            
+            messages.append(msg)
+
+        return messages
 
