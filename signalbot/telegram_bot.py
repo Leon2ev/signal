@@ -29,7 +29,7 @@ class TelegramBot():
             print('Chat id missing')
 
     def compose_msg(self, ao_signal, rsi_signal) -> Union[list[str], None]:
-        messages = list(str)
+        messages: list[str] = list()
         if ao_signal:
             msg = f'\u2705 *AO Signal*'
             for signal in ao_signal:
