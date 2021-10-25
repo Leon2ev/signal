@@ -83,10 +83,9 @@ class Data():
 		klines_df['AO'] = ao.awesome_oscillator()
 		klines_df['AO'] = klines_df['AO'].astype('float64')
 
-		if interval == '1h':
-			rsi = RSIIndicator(klines_df['High'])
-			klines_df['RSI'] = rsi.rsi()
-			klines_df['RSI'] = klines_df['RSI'].astype('float64')
+		rsi = RSIIndicator(klines_df['High'])
+		klines_df['RSI'] = rsi.rsi()
+		klines_df['RSI'] = klines_df['RSI'].astype('float64')
 
 		return klines_df
 
