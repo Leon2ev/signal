@@ -5,6 +5,7 @@ from datetime import datetime
 from binance import AsyncClient
 
 from signals.awesome import AOSignal
+from signals.rsi import RSISignal
 from signals.data import Data
 from telegram_bot import TelegramBot
 
@@ -20,10 +21,12 @@ async def main() -> None:
         await data.gather_klines_df('1h', 100)
 
         ao_signals = await AOSignal.get(data)
+        rsi_signals = await RSISignal.get(data)
         
-        message = telegram_bot.compose_msg(ao_signals)
-        if message:
-            telegram_bot.send_msg(message)
+        messages = telegram_bot.compose_msg(ao_signals, rsi_signals)
+        if messages:
+            for msg in messages:
+                telegram_bot.send_msg(msg)
 
         time.sleep(60 * (60 - datetime.now().minute))
 

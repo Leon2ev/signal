@@ -28,10 +28,20 @@ class TelegramBot():
         else:
             print('Chat id missing')
 
-    def compose_msg(self, ao_signal) -> Union[str, None]:
+    def compose_msg(self, ao_signal, rsi_signal) -> Union[list[str], None]:
+        messages = list(str)
         if ao_signal:
             msg = f'\u2705 *AO Signal*'
             for signal in ao_signal:
                 msg += f'\n\n*{signal}* \U0001F4C8 [Chart](https://www.binance.com/en/trade/{signal[:-4]}_{signal[-4:]})'
             
-            return msg
+            messages.append(msg)
+
+        if rsi_signal:
+            msg = f'\u2705 *RSI Signal*'
+            for signal in rsi_signal:
+                msg += f'\n\n*{signal}* \U0001F4C8 [Chart](https://www.binance.com/en/trade/{signal[:-4]}_{signal[-4:]})'
+            
+            messages.append(msg)
+
+        return messages

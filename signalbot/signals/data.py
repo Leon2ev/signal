@@ -39,6 +39,7 @@ class Data():
 					x['symbol'] != 'USDSBUSDT' and
 					x['symbol'] != 'USDPUSDT' and
 					x['symbol'] != 'SUSDUSDT' and
+					x['symbol'] != 'TUSDUSDT' and
 					x['symbol'] != 'BUSDUSDT', tickers))
 
 			self._usdt_market = [x['symbol'] for x in filtered_tickers]
