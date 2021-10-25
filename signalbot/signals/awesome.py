@@ -25,4 +25,5 @@ class AOSignal():
 						if df['AO'].size > 35 and df['AO'].gt(0).iloc[34]:
 							signal_symbols.append(symbol)
 
+		signal_symbols.sort()
 		return signal_symbols
