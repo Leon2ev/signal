@@ -18,7 +18,7 @@ async def main() -> None:
     await data.set_usdt_market()
 
     while True:
-        await data.gather_klines_df('1h', 100)
+        await data.gather_klines_df('4h', 100)
 
         ao_signals = await AOSignal.get(data)
         rsi_signals = await RSISignal.get(data)

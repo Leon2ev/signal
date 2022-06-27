@@ -18,7 +18,7 @@ class AOSignal():
 					high_period = df['High'].iloc[last_negative_ao_index:]
 
 					if 10 > high_period.size > 4 and high_period.idxmax() == 97:
-						interval = str('4h')
+						interval = str('1d')
 						limit = int(36)
 
 						df = await data.get_klines_df(symbol, interval, limit)
